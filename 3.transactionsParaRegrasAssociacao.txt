@@ -1,0 +1,30 @@
+id-1, Jogo de tênis nas sextas, Ana Silva, Bruno Costa, Carlos Souza, Daniela Rocha
+id-2, Monitoria de Cálculo 1 na segunda, Eduardo Lima, Fernanda Alves, Gustavo Pereira, Helena Martins
+id-3, Grupo de estudo de Algoritmos, Ana Silva, Bruno Costa, Igor Fernandes, Juliana Castro
+id-4, Pesquisa sobre IA generativa no LabWeb, Carlos Souza, Daniela Rocha, Kleber Santos, Laura Ribeiro
+id-5, Futebol no campus quarta noite, Marcos Teixeira, Natália Gomes, Otávio Barros, Patrícia Nunes
+id-6, Clube de leitura sexta à tarde, Quésia Duarte, Rafael Melo, Sabrina Freitas, Tiago Lopes
+id-7, Monitoria de Física 1, Eduardo Lima, Fernanda Alves, Igor Fernandes, Juliana Castro
+id-8, Treino funcional na quadra, Gustavo Pereira, Helena Martins, Marcos Teixeira, Natália Gomes
+id-9, Grupo de desenvolvimento em Python, Kleber Santos, Laura Ribeiro, Bruno Costa, Ana Silva
+id-10, Projeto de extensão social, Patrícia Nunes, Quésia Duarte, Rafael Melo, Sabrina Freitas
+id-11, Basquete terça à noite, Tiago Lopes, Otávio Barros, Marcos Teixeira, Gustavo Pereira
+id-12, Hackathon interno, Ana Silva, Carlos Souza, Kleber Santos, Igor Fernandes
+id-13, Grupo de banco de dados, Bruno Costa, Daniela Rocha, Laura Ribeiro, Juliana Castro
+id-14, Coral universitário, Fernanda Alves, Helena Martins, Quésia Duarte, Sabrina Freitas
+id-15, Estudo para prova de cálculo, Eduardo Lima, Igor Fernandes, Juliana Castro, Ana Silva
+id-16, Projeto de robótica, Carlos Souza, Gustavo Pereira, Kleber Santos, Marcos Teixeira
+id-17, Vôlei recreativo, Natália Gomes, Patrícia Nunes, Rafael Melo, Tiago Lopes
+id-18, Grupo de IA aplicada, Ana Silva, Bruno Costa, Carlos Souza, Kleber Santos
+id-19, Oficina de escrita acadêmica, Laura Ribeiro, Daniela Rocha, Sabrina Freitas, Quésia Duarte
+id-20, Treino de corrida no campus, Otávio Barros, Tiago Lopes, Marcos Teixeira, Gustavo Pereira
+id-21, Estudo de estruturas de dados, Bruno Costa, Igor Fernandes, Juliana Castro, Kleber Santos
+id-22, Cinema no auditório, Ana Silva, Daniela Rocha, Rafael Melo, Patrícia Nunes
+id-23, Grupo de matemática discreta, Eduardo Lima, Fernanda Alves, Igor Fernandes, Carlos Souza
+id-24, Desenvolvimento web colaborativo, Laura Ribeiro, Kleber Santos, Bruno Costa, Ana Silva
+id-25, Treino de tênis sábado, Ana Silva, Carlos Souza, Daniela Rocha, Gustavo Pereira
+id-26, Projeto de iniciação científica, Igor Fernandes, Juliana Castro, Kleber Santos, Laura Ribeiro
+id-27, Grupo de estudos de redes, Bruno Costa, Carlos Souza, Eduardo Lima, Fernanda Alves
+id-28, Aula de yoga coletiva, Patrícia Nunes, Sabrina Freitas, Quésia Duarte, Natália Gomes
+id-29, Competição de programação, Ana Silva, Bruno Costa, Igor Fernandes, Kleber Santos
+id-30, Estudo de engenharia de software, Laura Ribeiro, Daniela Rocha, Juliana Castro, Carlos Souza

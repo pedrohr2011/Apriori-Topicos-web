@@ -1,0 +1,46 @@
+tamanho,itemset,suporte
+1,{Ana Silva},0.333333
+1,{Bruno Costa},0.3
+1,{Carlos Souza},0.3
+1,{Kleber Santos},0.3
+1,{Igor Fernandes},0.266667
+1,{Daniela Rocha},0.233333
+1,{Juliana Castro},0.233333
+1,{Laura Ribeiro},0.233333
+1,{Gustavo Pereira},0.2
+1,{Eduardo Lima},0.166667
+1,{Fernanda Alves},0.166667
+1,{Marcos Teixeira},0.166667
+1,{Patrícia Nunes},0.166667
+1,{Quésia Duarte},0.166667
+1,{Sabrina Freitas},0.166667
+1,{Natália Gomes},0.133333
+1,{Rafael Melo},0.133333
+1,{Tiago Lopes},0.133333
+1,{Helena Martins},0.1
+1,{Otávio Barros},0.1
+2,"{Ana Silva, Bruno Costa}",0.2
+2,"{Ana Silva, Kleber Santos}",0.166667
+2,"{Bruno Costa, Kleber Santos}",0.166667
+2,"{Igor Fernandes, Juliana Castro}",0.166667
+2,"{Quésia Duarte, Sabrina Freitas}",0.166667
+2,"{Ana Silva, Carlos Souza}",0.133333
+2,"{Ana Silva, Igor Fernandes}",0.133333
+2,"{Carlos Souza, Daniela Rocha}",0.133333
+2,"{Carlos Souza, Kleber Santos}",0.133333
+2,"{Daniela Rocha, Laura Ribeiro}",0.133333
+2,"{Eduardo Lima, Fernanda Alves}",0.133333
+2,"{Gustavo Pereira, Marcos Teixeira}",0.133333
+2,"{Igor Fernandes, Kleber Santos}",0.133333
+2,"{Kleber Santos, Laura Ribeiro}",0.133333
+2,"{Ana Silva, Daniela Rocha}",0.1
+2,"{Bruno Costa, Carlos Souza}",0.1
+2,"{Bruno Costa, Igor Fernandes}",0.1
+2,"{Bruno Costa, Juliana Castro}",0.1
+2,"{Bruno Costa, Laura Ribeiro}",0.1
+2,"{Eduardo Lima, Igor Fernandes}",0.1
+2,"{Juliana Castro, Laura Ribeiro}",0.1
+2,"{Marcos Teixeira, Otávio Barros}",0.1
+2,"{Natália Gomes, Patrícia Nunes}",0.1
+2,"{Patrícia Nunes, Rafael Melo}",0.1
+3,"{Ana Silva, Bruno Costa, Kleber Santos}",0.133333
