@@ -1,5 +1,7 @@
 # Apriori - regras de associacao
 
+Trabalho da disciplina de Topicos Especiais em Desenvolvimento Web.
+
 > A documentacao em formato de trabalho universitario esta em `DOCUMENTACAO_TRABALHO.md`.
 
 Este projeto resolve a atividade com duas abordagens:
