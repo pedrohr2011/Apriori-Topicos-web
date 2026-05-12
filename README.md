@@ -2,8 +2,6 @@
 
 Trabalho da disciplina de Topicos Especiais em Desenvolvimento Web.
 
-> A documentacao em formato de trabalho universitario esta em `DOCUMENTACAO_TRABALHO.md`.
-
 Este projeto resolve a atividade com duas abordagens:
 
 1. `apriori_associacao.py`: implementacao do Apriori do zero em Python.
