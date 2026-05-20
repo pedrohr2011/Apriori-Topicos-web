@@ -1,0 +1,31 @@
+antecedente,consequente,suporte,confianca,lift,tipo
+{Quésia Duarte},{Sabrina Freitas},0.166667,1.0,6.0,par
+{Sabrina Freitas},{Quésia Duarte},0.166667,1.0,6.0,par
+{Otávio Barros},{Marcos Teixeira},0.1,1.0,6.0,par
+{Fernanda Alves},{Eduardo Lima},0.133333,0.8,4.8,par
+{Eduardo Lima},{Fernanda Alves},0.133333,0.8,4.8,par
+{Marcos Teixeira},{Gustavo Pereira},0.133333,0.8,4.0,par
+"{Ana Silva, Kleber Santos}",{Bruno Costa},0.133333,0.8,2.666667,par_com_terceiro
+"{Bruno Costa, Kleber Santos}",{Ana Silva},0.133333,0.8,2.4,par_com_terceiro
+{Natália Gomes},{Patrícia Nunes},0.1,0.75,4.5,par
+{Rafael Melo},{Patrícia Nunes},0.1,0.75,4.5,par
+{Juliana Castro},{Igor Fernandes},0.166667,0.714286,2.678571,par
+{Gustavo Pereira},{Marcos Teixeira},0.133333,0.666667,4.0,par
+"{Ana Silva, Bruno Costa}",{Kleber Santos},0.133333,0.666667,2.222222,par_com_terceiro
+{Bruno Costa},{Ana Silva},0.2,0.666667,2.0,par
+{Igor Fernandes},{Juliana Castro},0.166667,0.625,2.678571,par
+{Marcos Teixeira},{Otávio Barros},0.1,0.6,6.0,par
+{Patrícia Nunes},{Natália Gomes},0.1,0.6,4.5,par
+{Patrícia Nunes},{Rafael Melo},0.1,0.6,4.5,par
+{Eduardo Lima},{Igor Fernandes},0.1,0.6,2.25,par
+{Ana Silva},{Bruno Costa},0.2,0.6,2.0,par
+{Laura Ribeiro},{Daniela Rocha},0.133333,0.571429,2.44898,par
+{Daniela Rocha},{Laura Ribeiro},0.133333,0.571429,2.44898,par
+{Daniela Rocha},{Carlos Souza},0.133333,0.571429,1.904762,par
+{Laura Ribeiro},{Kleber Santos},0.133333,0.571429,1.904762,par
+{Bruno Costa},{Kleber Santos},0.166667,0.555556,1.851852,par
+{Kleber Santos},{Bruno Costa},0.166667,0.555556,1.851852,par
+{Kleber Santos},{Ana Silva},0.166667,0.555556,1.666667,par
+{Ana Silva},{Kleber Santos},0.166667,0.5,1.666667,par
+{Igor Fernandes},{Kleber Santos},0.133333,0.5,1.666667,par
+{Igor Fernandes},{Ana Silva},0.133333,0.5,1.5,par

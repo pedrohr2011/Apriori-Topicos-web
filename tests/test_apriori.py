@@ -1,12 +1,13 @@
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 
-from apriori_associacao import (
-    apriori,
+from src.apriori_manual import (
+    calculate_support,
     generate_association_rules,
+    generate_frequent_itemsets,
     load_transactions,
     recommend_participants,
-    support,
 )
 
 
@@ -20,13 +21,14 @@ class AprioriAssociacaoTest(unittest.TestCase):
         ]
 
     def test_load_transactions_ignores_id_and_description(self):
-        path = Path("test_transactions.txt")
-        path.write_text(
-            "id-1, Atividade A, Ana, Bruno, Carlos\n"
-            "id-2, Atividade B, Ana, Daniela\n",
-            encoding="utf-8",
-        )
-        try:
+        with TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "test_transactions.csv"
+            path.write_text(
+                "id-1, Atividade A, Ana, Bruno, Carlos\n"
+                "id-2, Atividade B, Ana, Daniela\n",
+                encoding="utf-8",
+            )
+
             self.assertEqual(
                 load_transactions(path),
                 [
@@ -34,24 +36,28 @@ class AprioriAssociacaoTest(unittest.TestCase):
                     frozenset(["Ana", "Daniela"]),
                 ],
             )
-        finally:
-            path.unlink()
 
     def test_support_counts_transactions_containing_all_items(self):
-        self.assertEqual(support(self.transactions, frozenset(["Ana"])), 0.75)
-        self.assertEqual(support(self.transactions, frozenset(["Ana", "Bruno"])), 0.5)
-        self.assertEqual(support(self.transactions, frozenset(["Ana", "Bruno", "Carlos"])), 0.25)
+        self.assertEqual(calculate_support(self.transactions, frozenset(["Ana"])), 0.75)
+        self.assertEqual(calculate_support(self.transactions, frozenset(["Ana", "Bruno"])), 0.5)
+        self.assertEqual(calculate_support(self.transactions, frozenset(["Ana", "Bruno", "Carlos"])), 0.25)
+
+    def test_support_returns_zero_for_empty_transactions(self):
+        self.assertEqual(calculate_support([], frozenset(["Ana"])), 0.0)
 
     def test_apriori_returns_only_frequent_itemsets_up_to_max_size(self):
-        itemsets = apriori(self.transactions, min_support=0.5, max_size=3)
+        itemsets = generate_frequent_itemsets(self.transactions, min_support=0.5, max_size=3)
 
         self.assertIn(frozenset(["Ana", "Bruno"]), itemsets)
         self.assertIn(frozenset(["Ana", "Carlos"]), itemsets)
         self.assertNotIn(frozenset(["Ana", "Bruno", "Carlos"]), itemsets)
         self.assertAlmostEqual(itemsets[frozenset(["Ana", "Bruno"])], 0.5)
 
-    def test_rules_include_support_confidence_and_leverage(self):
-        itemsets = apriori(self.transactions, min_support=0.25, max_size=3)
+    def test_apriori_returns_empty_result_without_transactions(self):
+        self.assertEqual(generate_frequent_itemsets([], min_support=0.5, max_size=3), {})
+
+    def test_rules_include_support_confidence_and_lift(self):
+        itemsets = generate_frequent_itemsets(self.transactions, min_support=0.25, max_size=3)
         rules = generate_association_rules(
             itemsets,
             min_confidence=0.50,
@@ -69,10 +75,10 @@ class AprioriAssociacaoTest(unittest.TestCase):
 
         self.assertEqual(rule.support, 0.25)
         self.assertAlmostEqual(rule.confidence, 0.5)
-        self.assertAlmostEqual(rule.leverage, 0.25 - (0.5 * 0.75))
+        self.assertAlmostEqual(rule.lift, 0.5 / 0.75)
 
     def test_recommend_participants_uses_rules_containing_known_participant(self):
-        itemsets = apriori(self.transactions, min_support=0.25, max_size=3)
+        itemsets = generate_frequent_itemsets(self.transactions, min_support=0.25, max_size=3)
         rules = generate_association_rules(
             itemsets,
             min_confidence=0.50,
