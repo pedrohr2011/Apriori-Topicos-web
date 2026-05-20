@@ -1,75 +1,142 @@
-# Apriori - regras de associacao
+# Análise de Regras de Associação com Apriori em Python
 
-Trabalho da disciplina de Topicos Especiais em Desenvolvimento Web.
+Projeto em Python para gerar regras de associação a partir de dados transacionais usando o algoritmo Apriori.
 
-Este projeto resolve a atividade com duas abordagens:
+A base usada neste trabalho representa atividades acadêmicas. Cada transação possui uma atividade e os alunos participantes. A análise busca encontrar alunos que aparecem juntos com frequência e transformar esses padrões em regras do tipo `A -> B`.
 
-1. `apriori_associacao.py`: implementacao do Apriori do zero em Python.
-2. `apriori_biblioteca.py`: execucao equivalente usando a biblioteca `mlxtend`.
+## Objetivo
 
-## Criterios usados
+O objetivo é entender e aplicar o Apriori na prática, passando por todo o fluxo:
 
-- Arquivo de entrada: `3.transactionsParaRegrasAssociacao.txt`
-- Cada linha e uma transacao/atividade.
-- As duas primeiras colunas sao ignoradas: id e descricao.
-- Os demais campos da linha sao tratados como alunos participantes.
-- Suporte minimo: `0.10`, ou seja, pelo menos 3 das 30 transacoes.
-- Confianca minima para exportar regras: `0.50`.
-- Tamanho maximo dos itemsets: 3, cobrindo pares e pares com um terceiro aluno.
+- leitura das transações;
+- geração de itemsets frequentes;
+- cálculo de suporte, confiança e lift;
+- criação de regras de associação;
+- exportação dos resultados em CSV;
+- comparação entre uma implementação manual e uma versão com biblioteca;
+- testes unitários para validar partes importantes da lógica.
 
-Metricas:
+## Tecnologias utilizadas
 
-- Suporte: proporcao de atividades em que o itemset aparece.
-- Confianca: `suporte(A uniao B) / suporte(A)`.
-- Alavancagem: `suporte(A uniao B) - suporte(A) * suporte(B)`.
+- Python
+- Pandas
+- mlxtend
+- unittest
+- CSV
+
+## Conceitos aplicados
+
+### Itemsets frequentes
+
+Conjuntos de itens que aparecem juntos com frequência nas transações.
+
+### Suporte
+
+Mostra a frequência de um itemset em relação ao total de transações.
+
+### Confiança
+
+Mostra a chance de um consequente aparecer quando o antecedente já apareceu.
+
+### Lift
+
+Compara a força da regra com o que seria esperado se os itens fossem independentes. Valores maiores que 1 indicam associação positiva.
+
+### Regras de associação
+
+Relações no formato `A -> B`. No contexto deste projeto, uma regra pode indicar que certos alunos costumam participar das mesmas atividades.
+
+## Estrutura do projeto
+
+```txt
+Apriori-Topicos-web/
+├── data/
+│   └── input/
+│       └── transactions.csv
+├── outputs/
+│   ├── itemsets_biblioteca.csv
+│   ├── itemsets_manuais.csv
+│   ├── recomendacoes_exemplo.csv
+│   ├── regras_biblioteca.csv
+│   └── regras_manuais.csv
+├── src/
+│   ├── apriori_manual.py
+│   ├── apriori_mlxtend.py
+│   ├── data_loader.py
+│   └── utils.py
+├── tests/
+│   └── test_apriori.py
+├── DOCUMENTACAO_TRABALHO.md
+├── .gitignore
+├── README.md
+├── main.py
+└── requirements.txt
+```
 
 ## Como executar
 
-Instale as dependencias da versao com biblioteca:
+Instale as dependências:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-Rode a implementacao manual:
+Execute a análise completa:
 
 ```bash
-python apriori_associacao.py
+python main.py
 ```
 
-Rode a versao com biblioteca:
+Também é possível rodar as versões separadamente:
 
 ```bash
-python apriori_biblioteca.py
+python -m src.apriori_manual
+python -m src.apriori_mlxtend
 ```
 
-Rode os testes da implementacao manual:
+## Como executar os testes
 
 ```bash
-python -m unittest test_apriori_associacao.py
+python -m unittest discover tests
 ```
 
-## Arquivos gerados
+## Resultados gerados
 
-Os resultados ficam na pasta `resultados/`:
+Os arquivos ficam na pasta `outputs/`:
 
-- `itemsets_manuais.csv`
-- `regras_manuais.csv`
-- `itemsets_biblioteca.csv`
-- `regras_biblioteca.csv`
-- `recomendacoes_exemplo.csv`
+- `itemsets_manuais.csv`: itemsets gerados pela implementação manual.
+- `regras_manuais.csv`: regras geradas pela implementação manual.
+- `itemsets_biblioteca.csv`: itemsets gerados com `mlxtend`.
+- `regras_biblioteca.csv`: regras geradas com `mlxtend`.
+- `recomendacoes_exemplo.csv`: recomendação simples baseada nas regras manuais.
 
-Com os parametros padrao, foram encontrados:
+Com os parâmetros atuais, o projeto usa:
 
-- 45 itemsets frequentes.
-- 27 regras de pares.
-- 3 regras de pares com um terceiro aluno.
+- suporte mínimo: `0.10`;
+- confiança mínima: `0.50`;
+- tamanho máximo dos itemsets: `3`.
 
-Exemplo de regra de recomendacao encontrada:
+## Exemplo de interpretação
 
-```text
+Uma das regras geradas é:
+
+```txt
 {Ana Silva, Bruno Costa} -> {Kleber Santos}
-suporte = 0.133333, confianca = 0.666667, alavancagem = 0.073333
 ```
 
-Nesse exemplo, se Ana Silva e Bruno Costa estiverem inscritos em uma nova atividade, Kleber Santos pode ser recomendado como participante potencial.
+Essa regra indica que Kleber Santos aparece em parte das transações onde Ana Silva e Bruno Costa aparecem juntos. Pela confiança da regra, isso pode ser usado como base para uma recomendação simples de participante.
+
+## Aprendizados
+
+Neste projeto foram praticados conceitos de mineração de dados, manipulação de arquivos CSV, implementação de algoritmo, cálculo de métricas e testes unitários.
+
+A implementação manual ajudou a entender as etapas do Apriori, enquanto a versão com `mlxtend` serviu como comparação para conferir os resultados.
+
+## Possíveis melhorias futuras
+
+- Criar gráficos para visualizar as regras.
+- Permitir o uso de outras bases de dados.
+- Criar uma interface web simples para upload do arquivo.
+- Adicionar notebooks explicativos.
+- Comparar o Apriori com FP-Growth.
+- Aumentar a cobertura dos testes.

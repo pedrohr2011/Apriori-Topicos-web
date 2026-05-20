@@ -1,17 +1,18 @@
 from __future__ import annotations
 
 import argparse
-import csv
 from dataclasses import dataclass
 from itertools import combinations
 from pathlib import Path
 from typing import Iterable
 
+from src.data_loader import DEFAULT_DATA_FILE, load_transactions
+from src.utils import format_itemset, write_csv
 
-DEFAULT_DATA_FILE = Path("3.transactionsParaRegrasAssociacao.txt")
 DEFAULT_MIN_SUPPORT = 0.10
 DEFAULT_MIN_CONFIDENCE = 0.50
 DEFAULT_MAX_SIZE = 3
+DEFAULT_OUTPUT_DIR = Path("outputs")
 
 
 @dataclass(frozen=True)
@@ -20,35 +21,37 @@ class Rule:
     consequent: frozenset[str]
     support: float
     confidence: float
-    leverage: float
+    lift: float
 
     @property
     def union_size(self) -> int:
         return len(self.antecedent | self.consequent)
 
 
-def load_transactions(path: str | Path) -> list[frozenset[str]]:
-    transactions: list[frozenset[str]] = []
-    with Path(path).open(newline="", encoding="utf-8") as file:
-        reader = csv.reader(file, skipinitialspace=True)
-        for row in reader:
-            if len(row) < 3:
-                continue
-            students = frozenset(item.strip() for item in row[2:] if item.strip())
-            if students:
-                transactions.append(students)
-    return transactions
-
-
-def support(transactions: Iterable[frozenset[str]], itemset: frozenset[str]) -> float:
+def calculate_support(transactions: Iterable[frozenset[str]], itemset: frozenset[str]) -> float:
     transactions_list = list(transactions)
     if not transactions_list:
         return 0.0
+
     count = sum(1 for transaction in transactions_list if itemset <= transaction)
     return count / len(transactions_list)
 
 
-def apriori(
+def calculate_confidence(itemset_support: float, antecedent_support: float) -> float:
+    if antecedent_support == 0:
+        return 0.0
+
+    return itemset_support / antecedent_support
+
+
+def calculate_lift(confidence: float, consequent_support: float) -> float:
+    if consequent_support == 0:
+        return 0.0
+
+    return confidence / consequent_support
+
+
+def generate_frequent_itemsets(
     transactions: list[frozenset[str]],
     min_support: float,
     max_size: int = DEFAULT_MAX_SIZE,
@@ -60,7 +63,7 @@ def apriori(
     size = 1
     while candidates and size <= max_size:
         current_frequents = {
-            candidate: support(transactions, candidate)
+            candidate: calculate_support(transactions, candidate)
             for candidate in candidates
         }
         current_frequents = {
@@ -74,6 +77,10 @@ def apriori(
         candidates = _next_candidates(set(current_frequents), size)
 
     return frequent_itemsets
+
+
+apriori = generate_frequent_itemsets
+support = calculate_support
 
 
 def _next_candidates(previous_frequents: set[frozenset[str]], size: int) -> set[frozenset[str]]:
@@ -119,18 +126,18 @@ def generate_association_rules(
                 if not antecedent_support or consequent_support is None:
                     continue
 
-                confidence = itemset_support / antecedent_support
+                confidence = calculate_confidence(itemset_support, antecedent_support)
                 if confidence < min_confidence:
                     continue
 
-                leverage = itemset_support - (antecedent_support * consequent_support)
+                lift = calculate_lift(confidence, consequent_support)
                 rules.append(
                     Rule(
                         antecedent=antecedent,
                         consequent=consequent,
                         support=itemset_support,
                         confidence=confidence,
-                        leverage=leverage,
+                        lift=lift,
                     )
                 )
 
@@ -138,10 +145,10 @@ def generate_association_rules(
         rules,
         key=lambda rule: (
             -rule.confidence,
-            -rule.leverage,
+            -rule.lift,
             -rule.support,
-            _format_itemset(rule.antecedent),
-            _format_itemset(rule.consequent),
+            format_itemset(rule.antecedent),
+            format_itemset(rule.consequent),
         ),
     )
 
@@ -163,24 +170,24 @@ def recommend_participants(
                 continue
 
             current = scores.get(student)
-            if current is None or (rule.confidence, rule.leverage, rule.support) > (
+            if current is None or (rule.confidence, rule.lift, rule.support) > (
                 float(current["confidence"]),
-                float(current["leverage"]),
+                float(current["lift"]),
                 float(current["support"]),
             ):
                 scores[student] = {
                     "aluno": student,
                     "confidence": rule.confidence,
                     "support": rule.support,
-                    "leverage": rule.leverage,
-                    "regra": f"{_format_itemset(rule.antecedent)} -> {_format_itemset(rule.consequent)}",
+                    "lift": rule.lift,
+                    "regra": f"{format_itemset(rule.antecedent)} -> {format_itemset(rule.consequent)}",
                 }
 
     return sorted(
         scores.values(),
         key=lambda item: (
             -float(item["confidence"]),
-            -float(item["leverage"]),
+            -float(item["lift"]),
             -float(item["support"]),
             str(item["aluno"]),
         ),
@@ -191,49 +198,36 @@ def write_itemsets(path: str | Path, itemsets: dict[frozenset[str], float]) -> N
     rows = [
         {
             "tamanho": len(itemset),
-            "itemset": _format_itemset(itemset),
+            "itemset": format_itemset(itemset),
             "suporte": round(value, 6),
         }
         for itemset, value in itemsets.items()
     ]
     rows.sort(key=lambda row: (int(row["tamanho"]), -float(row["suporte"]), str(row["itemset"])))
-    _write_csv(path, ["tamanho", "itemset", "suporte"], rows)
+    write_csv(path, ["tamanho", "itemset", "suporte"], rows)
 
 
 def write_rules(path: str | Path, rules: list[Rule]) -> None:
     rows = [
         {
-            "antecedente": _format_itemset(rule.antecedent),
-            "consequente": _format_itemset(rule.consequent),
+            "antecedente": format_itemset(rule.antecedent),
+            "consequente": format_itemset(rule.consequent),
             "suporte": round(rule.support, 6),
             "confianca": round(rule.confidence, 6),
-            "alavancagem": round(rule.leverage, 6),
+            "lift": round(rule.lift, 6),
             "tipo": "par" if rule.union_size == 2 else "par_com_terceiro",
         }
         for rule in rules
     ]
-    _write_csv(
+    write_csv(
         path,
-        ["antecedente", "consequente", "suporte", "confianca", "alavancagem", "tipo"],
+        ["antecedente", "consequente", "suporte", "confianca", "lift", "tipo"],
         rows,
     )
 
 
 def write_recommendations(path: str | Path, recommendations: list[dict[str, float | str]]) -> None:
-    _write_csv(path, ["aluno", "confidence", "support", "leverage", "regra"], recommendations)
-
-
-def _write_csv(path: str | Path, fieldnames: list[str], rows: list[dict[str, object]]) -> None:
-    target = Path(path)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
-
-
-def _format_itemset(itemset: frozenset[str] | set[str]) -> str:
-    return "{" + ", ".join(sorted(itemset)) + "}"
+    write_csv(path, ["aluno", "confidence", "support", "lift", "regra"], recommendations)
 
 
 def main() -> None:
@@ -241,11 +235,11 @@ def main() -> None:
     parser.add_argument("--data", default=str(DEFAULT_DATA_FILE), help="Arquivo de transacoes.")
     parser.add_argument("--min-support", type=float, default=DEFAULT_MIN_SUPPORT)
     parser.add_argument("--min-confidence", type=float, default=DEFAULT_MIN_CONFIDENCE)
-    parser.add_argument("--output-dir", default="resultados")
+    parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
     args = parser.parse_args()
 
     transactions = load_transactions(args.data)
-    itemsets = apriori(transactions, min_support=args.min_support, max_size=DEFAULT_MAX_SIZE)
+    itemsets = generate_frequent_itemsets(transactions, min_support=args.min_support, max_size=DEFAULT_MAX_SIZE)
     rules = generate_association_rules(
         itemsets,
         min_confidence=args.min_confidence,
@@ -267,11 +261,13 @@ def main() -> None:
     pair_rules = [rule for rule in rules if rule.union_size == 2]
     triple_rules = [rule for rule in rules if rule.union_size == 3 and len(rule.antecedent) == 2]
 
-    print(f"Transacoes lidas: {len(transactions)}")
-    print(f"Itemsets frequentes: {len(itemsets)}")
+    print("Analise manual concluida com sucesso.")
+    print(f"Transacoes processadas: {len(transactions)}")
+    print(f"Itemsets frequentes gerados: {len(itemsets)}")
+    print(f"Regras de associacao geradas: {len(rules)}")
     print(f"Regras de pares: {len(pair_rules)}")
     print(f"Regras de pares com terceiro item: {len(triple_rules)}")
-    print(f"Arquivos gerados em: {output_dir.resolve()}")
+    print(f"Arquivos exportados para: {output_dir.resolve()}")
 
 
 if __name__ == "__main__":
